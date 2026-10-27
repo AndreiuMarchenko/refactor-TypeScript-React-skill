@@ -18,9 +18,17 @@ Updated: {{actual-timestamp-and-timezone}}.
 
 ## Implemented Decisions
 
-| Finding ID and code evidence | Implemented decision and rationale/source | Resulting implementation and callers |
-| ---------------------------- | ----------------------------------------- | ------------------------------------ |
-| {{observed-finding}}         | {{implemented-change}}                    | {{code-and-integration-evidence}}    |
+{{Repeat this Engineering Decision record for each significant decision. Link cleanup IDs and verification rows below instead of duplicating their full evidence.}}
+
+### Engineering Decision: {{finding-id}}
+
+- **Problem:** {{observed-problem-and-consequence}}
+- **Evidence:** {{files-functions-callers-or-execution-paths-and-affected-behavior}}
+- **Source:** {{documentation-section-actually-read-and-supported-claim-or-explicit-evidence-gap}}
+- **Decision:** {{implemented-change-rationale-resulting-owner-and-consumers}}
+- **Alternatives:** {{reuse-existing-implementation-or-solve-without-new-abstraction-and-chosen-tradeoff}}
+- **Cleanup:** {{removed-or-remaining-legacy-IDs-and-evidence-or-reasoned-not-applicable}}
+- **Verification:** {{before-after-behavior-executed-checks-results-and-record-links-or-explicit-not-run}}
 
 ## Cleanup and Reachability
 

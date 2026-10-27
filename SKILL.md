@@ -4,7 +4,7 @@ description: "Audit and refactor TypeScript/React architecture, mixed responsibi
 license: "MIT"
 metadata:
   author: "Andrii Marchenko"
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # TypeScript/React Refactoring Based on Primary Sources
@@ -13,7 +13,7 @@ Stay within the requested scope: report findings for an audit; implement and ver
 
 ## Sources and Evidence
 
-Read [references/sources.md](references/sources.md), select relevant sources, and open the necessary sections before applying them. For another API, add its owner's official documentation. If access is unavailable, identify the unverified claim; do not present a recollection as a verified requirement.
+Read [references/sources.md](references/sources.md), identify the concrete code problem, select relevant sources, and open the necessary sections before applying them. Use its Engineering Decision Record for significant decisions, with explicit evidence, decision, cleanup, and verification. Read unrelated sources only if the scope requires them. For another API, add its owner's official documentation. If access is unavailable, identify the unverified claim; do not present a recollection as a verified requirement.
 
 Distinguish documented semantics, conclusions derived from principles, and local design decisions. React/TypeScript do not prescribe a universal file count, mandatory OOP, a Builder, or a single folder for types. A pattern catalog informs the choice; it does not require applying every pattern.
 
@@ -48,7 +48,7 @@ Verify observable behavior through affected boundaries. Passing type checks, sna
 ## Execution and Review
 
 1. Record the scope, public API, owners, and behavior/protocol invariants. Use other code as integration evidence. If a test preserves a defect, provide evidence and explicitly explain the behavior change.
-2. For significant findings, establish a brief chain: fact in the code → source/principle → consequence → proposed change. Distinguish defects from hypotheses and design preferences.
+2. For significant findings, use the Engineering Decision Record: problem → code evidence → relevant source → decision → alternatives → cleanup → verification. Distinguish defects from hypotheses and design preferences, proposed work from implemented changes, and expected checks from actual results.
 3. Choose the smallest sufficient structure; implement authorized changes along with updates to callers. Before deleting code, check references, entry points, and relevant dynamic imports, registries, and scripts. An unused binding does not prove the absence of side effects.
 4. Review the diff for dependency direction, ownership, stale work, types, duplication, and the actual purpose of builders and adapters. Give each temporary compatibility adapter a canonical target, callers, an owner, and a removal condition.
 5. Add concise Ukrainian JSDoc to classes and methods describing their purpose, ownership, and significant side effects or errors. Do not paraphrase the method body. Update documentation for changed APIs and build behavior.

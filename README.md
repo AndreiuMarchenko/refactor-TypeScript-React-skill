@@ -2,13 +2,14 @@
 
 An Agent Skill for auditing and refactoring TypeScript/React modules using authoritative documentation, explicit resource ownership, and verified behavior.
 
-Current release: [v1.1.0](https://github.com/AndreiuMarchenko/refactor-TypeScript-React-skill/releases/tag/v1.1.0).
+Current release: [v1.2.0](https://github.com/AndreiuMarchenko/refactor-TypeScript-React-skill/releases/tag/v1.2.0).
 
 Use it when cleaning up architecture, improving contracts and types, removing unnecessary wrappers or dead code, or fixing lifecycle and dependency boundaries. It gives Codex, Claude Code, or Cursor a reusable review and implementation workflow without treating legacy code as an architectural model.
 
 ## What It Does
 
 - Grounds decisions in official React/TypeScript documentation, Clean Architecture principles, and relevant pattern references.
+- Selects sources for the observed problem and records significant decisions with evidence, alternatives, cleanup, and verification. State identity, external stores, behavioral testing, and unsafe assignments have dedicated source guidance.
 - Uses legacy code to establish behavior and compatibility, rather than justify new design choices.
 - Groups responsibilities around behavior and ownership, with deliberate dependency boundaries.
 - Improves input validation, contracts, resource cleanup, and protection against stale callbacks.
@@ -245,7 +246,8 @@ refactor-TypeScript-React-skill/
 │   └── migration-reporting.md
 ├── releases/
 │   ├── v1.0.0.md
-│   └── v1.1.0.md
+│   ├── v1.1.0.md
+│   └── v1.2.0.md
 └── examples/
     ├── codex.md
     ├── claude-code.md
@@ -253,7 +255,7 @@ refactor-TypeScript-React-skill/
     └── react-demo/       # Runnable Before/After app, shared tests, locked dependencies
 ```
 
-GitHub Actions runs the demo checks on pushes and pull requests. Read the current [v1.1.0 release notes](releases/v1.1.0.md) or the [v1.0.0 release notes](releases/v1.0.0.md).
+GitHub Actions runs the demo checks on pushes and pull requests. Read the current [v1.2.0 release notes](releases/v1.2.0.md), or earlier notes for [v1.1.0](releases/v1.1.0.md) and [v1.0.0](releases/v1.0.0.md).
 
 ## Expected Output
 

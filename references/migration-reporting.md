@@ -29,7 +29,7 @@ If a baseline was not recorded, say `not_recorded`. Recover it only from a verif
 
 Finish cleanup already authorized and feasible in this pass. Then update both reports with:
 
-1. **Implemented decisions:** observed problem, chosen responsibility/contract change, rationale/source, resulting code and integration changes. Separate completed actions from proposals.
+1. **Implemented decisions:** use the [Engineering Decision Record](sources.md#engineering-decision-record), covering problem, code evidence, relevant source, decision, alternatives, cleanup, and verification. Record resulting owners and consumers; link cleanup IDs and verification rows rather than repeat them. Separate completed actions from proposals.
 2. **Cleanup inventory:** removed symbols/files, obsolete registrations, duplicate paths, proxy functions, and affected callers. Count relocated legacy across both source and destination; moving it outside the target folder is not removal.
 3. **Measured results:** baseline, current value, delta where comparable, measurement scope/method, and artifact or output supporting each result. Explain regressions and trade-offs.
 4. **Verification:** exact commands and working directory, current code snapshot, actual exit/result, relevant test/scenario coverage, artifact locations, and remaining verification gaps. Historical output must not be presented as a current run.
