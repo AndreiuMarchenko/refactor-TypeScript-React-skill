@@ -3,6 +3,8 @@ migration_id: "{{existing-or-derived-migration-id}}"
 migration_root: "{{authorized-repository-relative-root}}"
 scope: "{{repository-relative-target}}"
 refactoring_status: in_progress
+behavior_status: not_verified
+architecture_status: not_verified
 migration_status: in_progress
 validated_code_state: unverified
 ---
@@ -16,9 +18,19 @@ Updated: {{actual-timestamp-and-timezone}}.
 
 {{Requested outcome, inspected paths/consumers, behavior/protocol invariants, and actual acceptance criteria. List exclusions and unassessed areas explicitly.}}
 
+## Responsibility Map and Closure
+
+{{For each mixed file, identify concrete policy groups and independent reasons to change. Trace reachable helper effects. Reconcile every ID with the final implementation; a generic mapper/projection label is insufficient.}}
+
+| Group/finding ID and original file | Logical group and reason to change | Inputs and outputs | Dependencies and transitive effect paths | Final owner and migrated callers | Closure evidence or unresolved constraint |
+| --- | --- | --- | --- | --- | --- |
+| {{stable-id-and-location}} | {{policy-and-change-reason}} | {{input-output-contracts}} | {{helpers-ports-and-effect-owner}} | {{final-owner-and-callers}} | {{verified-separation-or-incomplete}} |
+
 ## Implemented Decisions
 
 {{Repeat this Engineering Decision record for each significant decision. Link cleanup IDs and verification rows below instead of duplicating their full evidence.}}
+
+{{When applicable, record class/value-object versus function/DTO choices, helper keep/consolidate/relocate/remove decisions, and the consumer or compatibility evidence for retained re-export entry points. Document shared construction/parsing invariants, actual round-trip checks, and unresolved gaps. A facade label or utility filename is not justification.}}
 
 ### Engineering Decision: {{finding-id}}
 
@@ -65,4 +77,9 @@ Baseline snapshot: {{verified-baseline-or-not-recorded}}.
 
 ## Status and History
 
-{{Explain the two statuses separately, unresolved blockers, stale evidence, and changes since the previous pass. Preserve prior failures and decisions with their context.}}
+| Assessment | Verdict | Evidence and remaining gaps |
+| --- | --- | --- |
+| Behavior | not_verified | {{executed-scenarios-and-actual-results}} |
+| Architecture | not_verified | {{cohesion-dependency-direction-effect-ownership-and-every-group-ID-closure}} |
+
+{{Explain behavior, architecture, local refactoring, and migration statuses separately. Unresolved in-scope mixing keeps architecture incomplete even if behavior tests pass. Record blockers, stale evidence, and changes since the previous pass; preserve earlier failures and decisions.}}

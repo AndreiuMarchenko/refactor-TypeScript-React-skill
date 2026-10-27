@@ -1,20 +1,39 @@
 # Refactoring Review Criteria
 
-Read this reference when changing routers, normalization boundaries, mixed coordinators, or stateful adapters. Select checks relevant to the actual change; these are engineering acceptance criteria, not universal React/TypeScript mandates or a required folder template.
+Read this reference when changing routers, normalization boundaries, mixed coordinators, stateful adapters, utility collections, or module entry points. Select checks relevant to the actual change; these are engineering acceptance criteria, not universal React/TypeScript mandates or a required folder template.
 
 ## Responsibility Boundaries
 
+- For every mixed file, record stable group/finding IDs, its logical groups, inputs, outputs, dependencies, effects, and reasons to change. Name concrete policies and their consumers. "Everything is projection" does not explain why thumbnail rules, notification settings, and text clipping would change together.
+- Give each discovered independent policy a cohesive owner within the authorized refactoring scope. Keep the coordinator focused on ordering/composition, migrate callers, and remove the superseded implementation. A helper extraction that leaves independent policies under the same mixed owner does not close the finding. Any unresolved group keeps architecture incomplete; identify the exact constraint rather than silently excluding it.
 - Identify parsing/validation, representation mapping, orchestration, resource ownership, concrete effects, and compatibility dispatch in the target. Separate responsibilities that change independently. Keep related rules together; one function or file per branch is not a goal.
 - A routing coordinator should make precedence and terminal outcomes visible. It should not also decode embedded JSON, construct legacy UI-handler contexts, normalize identifiers, and mutate unrelated state. Move those responsibilities to their actual owners rather than wrapping the original body in more functions.
 - Define boundary contracts around the operations the scenario needs. An opaque generic carrying an entire hook registry or framework context does not establish a meaningful application boundary. Concrete adapters own that context and translate it explicitly.
 - Keep representation types with their model and integration contracts with their boundary. Separate them from orchestration when they have independent consumers and reasons to change. Do not create an unrelated shared-types dump or mirror every class with an interface.
 - Choose a simple switch, an ordered dispatch chain, composition, or a stateful object based on the problem. Preserve protocol precedence and receiver binding. A thin adapter can be justified by binding, snapshot ownership, validation, or translation; its small size alone is not grounds for deletion.
 
+## Abstractions, Helpers, and Entry Points
+
+- **Class, value object, function, or DTO:** explicitly evaluate an invariant-owning value object or stateful class where valid construction, identity, legal transitions, or resource lifetime need a single owner. State which invariants or transitions it protects and how callers use it. Choose pure functions for stateless policy/transformations and plain contracts for data transfer when object ownership adds no benefit. A class made only of static wrappers does not resolve a mixed responsibility; function count and file size do not decide the form.
+- **Helper disposition:** inspect affected exported helpers and forwarding chains, their callers, side effects, and actual policy. Keep shared guards, precedence rules, precision-preserving parsing, and canonical representation logic when they serve a real contract. Consolidate duplicated rules under their owner; inline or delete trivial forwarding without a responsibility when safe, and migrate callers. Do not delete a small function just because it is short, or preserve one merely because a caller exists. Record what value remains after removing the indirection.
+- **Utility ownership:** modules named `values`, `scopes`, `common`, or `utils` must pass the same responsibility map as any other module. Identify each concept's owner and consumers. Do not move domain rules into a miscellaneous collection to make another file smaller. Shared wire primitives can be cohesive; identity codecs, window decoding, ordering policy, and application decisions require separate ownership analysis when their reasons to change differ. A filename alone neither proves nor disproves cohesion.
+- **Public entry point versus relay:** a file containing only re-exports can define a supported package/module API without forwarding execution. Establish its actual consumers, curated exports, hidden internals, package exports, or compatibility constraint. A facade comment or directory convention alone is insufficient. Remove redundant re-export hops with no boundary purpose and update callers; retain a required public path with evidence and preserve its compatibility. Check import evaluation and side effects before rewiring, and avoid exposing extra helpers merely to fill a barrel.
+- **Construction and parsing:** related factories, constructors, parsers, and serializers must use an explicit shared validity/canonicalization policy. Verify semantic round trips for accepted values and consistent handling of invalid, boundary, and precision-sensitive inputs. If a factory successfully returns a domain value that its paired parser rejects, resolve the mismatch or identify an evidenced caller-owned precondition; do not claim the invariant is encapsulated. Type aliases, assertions, or renaming a formatter into a constructor do not enforce validity. Preserve established wire acceptance unless a behavior change is authorized and documented.
+
+Use the existing Engineering Decision records to explain these choices, with consumer/invariant evidence and cleanup outcomes. In the final review, identify removed helpers/proxies, justified retained entry points and aliases, selected object/function ownership, and unresolved invariant gaps. An unexplained abstraction or public relay remains an open structural finding.
+
+## Transitive Effect Review
+
+Follow the helper calls reachable from each mapped group, including injected callbacks and cache/store adapters. Record each observable mutation, persistence operation, subscription, or other external action and its call path. Review helper implementations rather than infer purity from names or return types. A formatting function that calls a helper which writes a cache is effectful even when its own body contains no write.
+
+Separate pure presentation policy from required cache/state changes at an explicit effect-owning boundary. Preserve effect timing, data, and failure behavior unless a change is authorized. Verify both returned data and resulting cache/state; deleting a required write to make a formatter pure is a behavioral regression. An uninspected dynamic helper remains a stated evidence gap.
+
 ## Behavioral Checks Across Boundaries
 
 | Changed area | Evidence to obtain |
 | --- | --- |
 | Decoder, mapper, object merge | Preserve missing fields separately from `undefined` and `null`, identifier precision, unknown wire fields, and documented metadata precedence. Test the actual decoder-to-consumer path, including metadata present only inside a payload. Do not tighten an accepted input format without contract evidence and an explicit behavior change. |
+| Domain construction or representation conversion | Compare factory/constructor acceptance with parser/serializer acceptance and documented canonicalization. Exercise semantic round trips, invalid inputs, bounds, and identifier precision through actual consumers. Record required caller preconditions and authorized changes; a successful construction must not silently promise validity that the paired parser rejects. |
 | Dispatch pipeline | Exercise overlapping matches, first-owner termination, unknown/malformed input, and handler registration changes. If dispatch uses a mutable registry, define whether one frame uses one snapshot and test that policy. Preserve differences between top-level and nested payloads. |
 | Deferred state reconciliation | Identify which values must be captured with their owner and which must be read fresh. Test a newer explicit user choice within the same scope, rapid scope changes, and cancellation. An identity check alone does not protect newly changed state inside an unchanged scope. |
 | Subscription or projection | Test startup with prepopulated state, updates around setup, and stop/start or replacement. Define initial reconciliation, not only future-event handling; test that stale cleanup cannot release the current owner's resource. |
@@ -23,6 +42,10 @@ Read this reference when changing routers, normalization boundaries, mixed coord
 Assert consumer-visible data and final state, not only helper calls, branch counts, or the existence of new files. Test doubles should implement the real port contract without unchecked casts that hide mismatches. Do not write redundant tests for mechanical moves.
 
 ## Final Review
+
+Reconcile every group/finding ID with its final owner, affected callers, and closure evidence. Inspect the bodies at their final locations; changes in names or file count do not establish separation. Assess cohesion, dependency direction, transitive effects, and remaining mixed modules independently of test results.
+
+Record separate behavior and architecture verdicts. Behavior can be verified while architecture is incomplete. Architecture cannot be verified with an unresolved in-scope mixing finding, an unreviewed effect path, or a policy merely relocated into another generic projection module. A positive verdict must identify what changed and why each remaining coordinator is cohesive.
 
 For affected similar contracts, record the duplicates eliminated and the reasons for each retained separation under the skill's Contract Identity and Reuse criteria. Check actual consumer semantics and field-presence behavior; matching fields or different type names alone do not establish whether concepts should be shared.
 

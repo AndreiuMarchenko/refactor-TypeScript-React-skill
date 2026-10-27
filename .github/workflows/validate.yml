@@ -1,4 +1,4 @@
-name: Validate React demo
+name: Validate examples
 on:
   push:
   pull_request:
@@ -16,5 +16,20 @@ jobs:
           node-version: 24
           cache: npm
           cache-dependency-path: examples/react-demo/package-lock.json
+      - run: npm ci
+      - run: npm run check
+
+  mixed-mapper:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/mixed-mapper/project
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: examples/mixed-mapper/project/package-lock.json
       - run: npm ci
       - run: npm run check

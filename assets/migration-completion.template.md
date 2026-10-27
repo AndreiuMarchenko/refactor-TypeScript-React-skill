@@ -2,6 +2,8 @@
 migration_id: "{{existing-or-derived-migration-id}}"
 migration_root: "{{authorized-repository-relative-root}}"
 status: in_progress
+behavior_status: not_verified
+architecture_status: not_verified
 validated_code_state: unverified
 ---
 
@@ -48,6 +50,7 @@ Final tested source state: {{commit-or-content-manifest-including-untracked-sour
 | Superseded production implementations removed; zero reachable old paths; callers migrated | not_verified   | {{reachability-and-removal-evidence}}      |
 | Current adapters justified; historical fixtures excluded from production                  | not_verified   | {{module-graph-evidence}}                  |
 | Required combined behavior/type/lint/build checks pass                                    | not_verified   | {{current-verification}}                   |
+| Independent architecture review verifies cohesion, dependency direction, effect ownership, and closure of every in-scope mixing finding | not_verified | {{responsibility-map-and-final-owner-evidence}} |
 | Required measured cleanup/performance criteria met                                        | not_verified   | {{metrics-or-justified-non-applicability}} |
 | No unresolved prerequisites, defects, or blockers; reports agree                          | not_verified   | {{reconciled-findings}}                    |
 

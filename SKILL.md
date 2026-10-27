@@ -4,7 +4,7 @@ description: "Audit and refactor TypeScript/React architecture, mixed responsibi
 license: "MIT"
 metadata:
   author: "Andrii Marchenko"
-  version: "1.3.0"
+  version: "1.4.0"
 ---
 
 # TypeScript/React Refactoring Based on Primary Sources
@@ -36,19 +36,28 @@ Before adding or retaining similar contracts, compare their values, ownership, i
 
 Distinguish an absent optional field from a present field whose value is `undefined` or `null`. Preserve these distinctions through contract changes, decoding, and mapping. In the final review, document which contract duplicates were eliminated and why the remaining similar contracts were kept separate, using ownership, invariants, and consumer evidence.
 
+## Abstraction and Public Boundary Decisions
+
+For affected utility collections, domain objects, forwarding helpers, and module entry points, apply the [abstraction, helper, and entry-point review](references/refactoring-review.md#abstractions-helpers-and-entry-points). Explicitly evaluate a class or value object where construction invariants, identity, state transitions, or resource ownership need encapsulation; justify the selected form. Pure functions and DTOs remain valid where no object ownership is needed.
+
+Give affected helpers and re-export-only files an evidence-backed disposition: keep, consolidate, relocate to the actual owner, or remove with caller migration. A meaningful public API is different from an unnecessary relay. Names such as `values`, `scopes`, or `utils`, static-method classes, and facade comments do not establish cohesion or boundary value. Verify shared construction/parsing invariants and account for retained abstractions in the final review.
+
 ## Structural Completion Gate
 
-Before an architectural refactor, identify the target's responsibilities and independent reasons to change. Choose boundaries from that map, not from file length or the names of existing folders. For routers, normalizers, mixed coordinators, or stateful adapters, read [references/refactoring-review.md](references/refactoring-review.md) before implementation and use its relevant checks during final review.
+Before an architectural refactor, map each mixed file's logical groups, inputs, outputs, dependencies, and independent reasons to change. Trace called helpers for transitive effects. Names such as "mapper", "projection", or "adapter" are not a responsibility map. For routers, normalizers, mixed coordinators, stateful adapters, utility collections, or module entry points, read [references/refactoring-review.md](references/refactoring-review.md) before implementation and use its relevant checks during final review.
 
-Moving a mixed implementation, removing `any`, adding a class, or extracting branches into helpers does not by itself complete the refactor. Inspect every affected implementation at its final location, including code moved into adapters. Explain which responsibilities were separated and why each remaining coordinator is cohesive. Do not declare completion while a known in-scope responsibility problem is merely relocated or hidden behind a broad port.
+Close every identified in-scope mixing finding by separating independently changing policies into cohesive owners and migrating callers. Choose the smallest structure that actually closes those findings; minimality cannot justify retaining a known mixed module. Thumbnail selection, notification preferences, and text clipping need separate ownership when their rules change independently, even if they all contribute to one projection. A coordinator may assemble their results without owning their policies.
 
-Verify observable behavior through affected boundaries. Passing type checks, snapshots, and unit tests is evidence for their covered scenarios, not a substitute for this structural review. Report unresolved structural findings explicitly rather than labeling the whole result clean.
+Moving a mixed implementation, removing `any`, adding a class, or extracting branches into helpers does not by itself complete the refactor. Inspect every affected implementation at its final location, including code moved into adapters. Unresolved mixing means architectural work remains incomplete; record the precise finding and scope or dependency constraint. Do not invent an exclusion or use a broad label to declare it closed.
+
+Assess behavior and architecture separately. Behavior verification covers the executed scenarios; architecture verification requires a final review of cohesion, dependency direction, effect ownership, and all remaining mixed modules against the original map. Green tests cannot close a structural finding. Report both verdicts and their evidence in the migration reports.
 
 When performance is in scope or measurements expose a regression, follow the [performance optimization workflow](references/migration-reporting.md#performance-optimization) and select relevant sources. Establish a baseline and bottleneck before choosing an optimization; memoization is conditional, and improvement claims require comparable measurements plus preserved behavior.
 
 ## Lifecycle and Executable Code
 
 - Define ownership, startup, and cleanup for every socket, timer, listener, subscription, worker, and object URL. Imports and rendering must not start hidden resources. React Effects need correct dependencies and symmetric cleanup; repeated setup/cleanup/setup must remain correct.
+- Audit effects through the reachable helper call graph, not only the current function body. Formatting must not hide cache writes or other mutations behind a helper. Preserve required effects under an explicit owner and contract; unknown helper behavior is an open review gap, not evidence of purity.
 - Stale callbacks must not modify the current state: check identity, generation, or scope wherever work outlives an ownership change. Cleanup must be idempotent, cover partial setup, and avoid releasing a new resource in place of the old one.
 - Use a typed entry point and a build artifact for startup or worker code. Do not hide logic in large JavaScript strings, `eval`, or `Function.toString()`. Server assembly may add escaped configuration to the bundle. Integrate generation into the necessary build/test/dev workflows; do not edit generated files manually.
 - Distinguish a transport send, a server ACK, and a completed business operation. Retrying mutations requires a suitable contract. Do not mask unexpected errors with a silent outer `catch`.
@@ -57,7 +66,7 @@ When performance is in scope or measurements expose a regression, follow the [pe
 
 1. Record the scope, public API, owners, and behavior/protocol invariants. Use other code as integration evidence. If a test preserves a defect, provide evidence and explicitly explain the behavior change.
 2. For significant findings, use the Engineering Decision Record: problem → code evidence → relevant source → decision → alternatives → cleanup → verification. Distinguish defects from hypotheses and design preferences, proposed work from implemented changes, and expected checks from actual results.
-3. Choose the smallest sufficient structure; implement authorized changes along with updates to callers. Before deleting code, check references, entry points, and relevant dynamic imports, registries, and scripts. An unused binding does not prove the absence of side effects.
+3. Choose a structure that closes every mapped in-scope mixing finding; minimize only among structures that meet that condition. Implement authorized changes along with updates to callers. Before deleting code, check references, entry points, and relevant dynamic imports, registries, and scripts. An unused binding does not prove the absence of side effects.
 4. Review the diff for dependency direction, ownership, stale work, types, duplication, and the actual purpose of builders and adapters. Give each temporary compatibility adapter a canonical target, callers, an owner, and a removal condition.
 5. Add concise Ukrainian JSDoc to classes and methods describing their purpose, ownership, and significant side effects or errors. Do not paraphrase the method body. Update documentation for changed APIs and build behavior.
 6. Run checks proportional to the risk: type checking, scoped linting, and relevant behavior tests for code; a production build for server/client boundaries, startup, or pipeline changes. For documentation, check formatting and links. Add regression tests for behavioral defects; do not test the mere fact that a file moved.

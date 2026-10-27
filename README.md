@@ -2,7 +2,7 @@
 
 An Agent Skill for auditing and refactoring TypeScript/React modules using authoritative documentation, explicit resource ownership, and verified behavior.
 
-Current release: [v1.3.0](https://github.com/AndreiuMarchenko/refactor-TypeScript-React-skill/releases/tag/v1.3.0).
+Current release: [v1.4.0](https://github.com/AndreiuMarchenko/refactor-TypeScript-React-skill/releases/tag/v1.4.0).
 
 Use it when cleaning up architecture, improving contracts and types, removing unnecessary wrappers or dead code, or fixing lifecycle and dependency boundaries. It gives Codex, Claude Code, or Cursor a reusable review and implementation workflow without treating legacy code as an architectural model.
 
@@ -12,10 +12,12 @@ Use it when cleaning up architecture, improving contracts and types, removing un
 - Selects sources for the observed problem and records significant decisions with evidence, alternatives, cleanup, and verification. State identity, external stores, behavioral testing, and unsafe assignments have dedicated source guidance.
 - Uses legacy code to establish behavior and compatibility, rather than justify new design choices.
 - Groups responsibilities around behavior and ownership, with deliberate dependency boundaries.
+- Requires a per-file responsibility map, closure of identified mixing, and transitive effect review; reports behavior and architectural completion separately.
 - Uses React guidance for component boundaries, state ownership, Hooks, and render purity; investigates performance through profiling and comparable Before/After measurements before choosing optimizations.
 - Compares similar contracts by values, ownership, invariants, consumers, and evolution rationale; documents removed duplicates and justified distinctions, including optional, null, and undefined states.
 - Improves input validation, contracts, resource cleanup, and protection against stale callbacks.
 - Applies classes, builders, and other patterns only when they solve an identified problem.
+- Explicitly reviews class/value-object versus function ownership, helper cleanup, public entry points versus redundant relays, and consistency between construction and parsing.
 - Requires evidence for dead-code removal and checks appropriate to the change.
 - Checks that migrated callers no longer reach obsolete implementations, duplicate logic, or unnecessary adapters.
 - Writes per-folder migration reports and a shared completion record with implemented decisions, measured results, remaining dependencies, and evidence-based closure criteria.
@@ -105,6 +107,8 @@ npm run dev
 ```
 
 `check` runs the After tests, verifies that the Before component exhibits exactly the six expected regression failures, type-checks both versions, and builds the application. `npm run test:before` exposes those failures directly and intentionally exits nonzero. The [demo guide](examples/react-demo/README.md) includes a repeatable skill-evaluation task and expected findings.
+
+The [mixed-mapper evaluation](examples/mixed-mapper/README.md) adds a structural challenge with text, media, users, notification preferences, and cache effects. Its original behavior tests already pass; accepting a refactor additionally requires reviewing responsibility separation, effect ownership, and removal of the superseded implementation.
 
 ## Installation
 
@@ -250,15 +254,17 @@ refactor-TypeScript-React-skill/
 │   ├── v1.0.0.md
 │   ├── v1.1.0.md
 │   ├── v1.2.0.md
-│   └── v1.3.0.md
+│   ├── v1.3.0.md
+│   └── v1.4.0.md
 └── examples/
     ├── codex.md
     ├── claude-code.md
     ├── cursor.md
-    └── react-demo/       # Runnable Before/After app, shared tests, locked dependencies
+    ├── react-demo/       # Runnable Before/After app, shared tests, locked dependencies
+    └── mixed-mapper/     # Independent structural evaluation with an already-green baseline
 ```
 
-GitHub Actions runs the demo checks on pushes and pull requests. Read the current [v1.3.0 release notes](releases/v1.3.0.md), or earlier notes for [v1.2.0](releases/v1.2.0.md), [v1.1.0](releases/v1.1.0.md), and [v1.0.0](releases/v1.0.0.md).
+GitHub Actions runs both example projects' behavior/type checks on pushes and pull requests. Read the current [v1.4.0 release notes](releases/v1.4.0.md), or earlier notes for [v1.3.0](releases/v1.3.0.md), [v1.2.0](releases/v1.2.0.md), [v1.1.0](releases/v1.1.0.md), and [v1.0.0](releases/v1.0.0.md). Architectural grading of the mixed-mapper exercise remains a separate review.
 
 ## Expected Output
 
