@@ -1,6 +1,6 @@
 interface:
   display_name: "Source-driven TypeScript Refactoring"
   short_description: "Refactor TypeScript/React using authoritative sources"
-  default_prompt: "Use $source-driven-refactor to audit and refactor the specified TypeScript/React module using authoritative sources while preserving agreed behavior."
+  default_prompt: "Use $source-driven-refactor for the requested TypeScript/React audit or refactoring; preserve agreed behavior and, for implementation work, update evidence-based folder and shared migration reports."
 policy:
   allow_implicit_invocation: true

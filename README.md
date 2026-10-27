@@ -2,6 +2,8 @@
 
 An Agent Skill for auditing and refactoring TypeScript/React modules using authoritative documentation, explicit resource ownership, and verified behavior.
 
+Current release: [v1.1.0](https://github.com/AndreiuMarchenko/refactor-TypeScript-React-skill/releases/tag/v1.1.0).
+
 Use it when cleaning up architecture, improving contracts and types, removing unnecessary wrappers or dead code, or fixing lifecycle and dependency boundaries. It gives Codex, Claude Code, or Cursor a reusable review and implementation workflow without treating legacy code as an architectural model.
 
 ## What It Does
@@ -13,10 +15,11 @@ Use it when cleaning up architecture, improving contracts and types, removing un
 - Applies classes, builders, and other patterns only when they solve an identified problem.
 - Requires evidence for dead-code removal and checks appropriate to the change.
 - Checks that migrated callers no longer reach obsolete implementations, duplicate logic, or unnecessary adapters.
+- Writes per-folder migration reports and a shared completion record with implemented decisions, measured results, remaining dependencies, and evidence-based closure criteria.
 
 For an audit request, the agent reports findings. For a refactoring request, it implements and verifies changes within the requested scope. The skill does not enforce a fixed folder structure or replace type checking, linting, tests, or human review.
 
-Read [SKILL.md](SKILL.md) for the complete instructions and [references/sources.md](references/sources.md) for the source catalog. The current instructions request Ukrainian JSDoc for classes and methods; specify another language in your task if needed.
+Read [SKILL.md](SKILL.md) for the complete instructions, [references/sources.md](references/sources.md) for the source catalog, and [references/refactoring-review.md](references/refactoring-review.md) for structural review and behavioral checks. Moving files or passing tests alone does not complete an architectural refactor. The current instructions request Ukrainian JSDoc for classes and methods; specify another language in your task if needed.
 
 ## Requirements
 
@@ -117,7 +120,7 @@ For a new personal installation in Codex, run this from the root of the download
 ```sh
 skill_target="$HOME/.agents/skills/source-driven-refactor"
 mkdir -p "$skill_target"
-cp -R SKILL.md LICENSE agents references "$skill_target/"
+cp -R SKILL.md LICENSE agents references assets "$skill_target/"
 ```
 
 For Claude Code, use the same commands with this destination:
@@ -194,6 +197,34 @@ All three tools can also select a relevant skill automatically based on its desc
 
 `agents/openai.yaml` is the working Codex metadata example. Claude Code and Cursor load the shared skill instructions through their own discovery locations.
 
+## Migration Reports and Final Completion
+
+Each authorized refactoring pass creates or updates:
+
+- `<target>/MIGRATION_REPORT.md`, beside the module README: implemented decisions, removed code/callers, before/after measurements, actual verification, and remaining migration items with their dependencies and removal conditions.
+- `docs/migrations/<migration-id>/MIGRATION_COMPLETION.md`: the agreed folder/consumer inventory, links to module reports, deduplicated cross-folder work, combined measurements, and the final closure decision. Its status starts as `in_progress`.
+
+A folder can have verified refactoring while the overall migration is incomplete. Later passes reuse the same migration ID and shared record. Remaining steps must follow actual code dependencies and test gaps; the agent must finish authorized feasible cleanup rather than use a report to postpone it.
+
+When asked to finalize the migration, the agent reads all folder reports, inspects the entire agreed inventory including unassessed folders, reconciles old claims with current code, implements remaining migrations, deletes superseded production implementations, and reruns combined verification. It then updates the shared record; summarizing earlier reports is insufficient.
+
+`complete` requires no unassessed scope gaps, no superseded production implementations or reachable old execution paths, verified migrated consumers and required behavior, satisfied applicable measurement criteria, and no unresolved implementation blockers. Moving code outside a measured folder or renaming a compatibility adapter does not satisfy removal. Useful current adapters and explicitly non-production historical fixtures are assessed by their actual role.
+
+Performance improvements require comparable measurements. Missing evidence is reported as `not_measured`/`not_recorded`; neither fewer lines nor more passing tests proves faster runtime. The final record identifies the tested code snapshot and current verification evidence.
+
+See the [reporting workflow](references/migration-reporting.md), [folder report template](assets/migration-report.template.md), and [shared completion template](assets/migration-completion.template.md). A read-only audit respects the no-write instruction and returns its findings without creating implementation-completion claims.
+
+Example finalization request; use the ID and scope already recorded for your migration:
+
+```text
+$source-driven-refactor
+Finalize the chat-cleanup migration within src/features/chat and its affected consumers.
+Read all module MIGRATION_REPORT.md files and the shared MIGRATION_COMPLETION.md.
+Revalidate their claims, inspect unassessed folders, execute remaining migrations,
+remove superseded production code, and run combined checks and applicable measurements.
+Update the completion record with the evidence and actual status.
+```
+
 ## Repository Structure
 
 ```text
@@ -205,10 +236,16 @@ refactor-TypeScript-React-skill/
 ├── SKILL.md
 ├── agents/
 │   └── openai.yaml
+├── assets/
+│   ├── migration-report.template.md
+│   └── migration-completion.template.md
 ├── references/
-│   └── sources.md
+│   ├── sources.md
+│   ├── refactoring-review.md
+│   └── migration-reporting.md
 ├── releases/
-│   └── v1.0.0.md
+│   ├── v1.0.0.md
+│   └── v1.1.0.md
 └── examples/
     ├── codex.md
     ├── claude-code.md
@@ -216,11 +253,11 @@ refactor-TypeScript-React-skill/
     └── react-demo/       # Runnable Before/After app, shared tests, locked dependencies
 ```
 
-GitHub Actions runs the demo checks on pushes and pull requests. Release notes are maintained in [releases/v1.0.0.md](releases/v1.0.0.md).
+GitHub Actions runs the demo checks on pushes and pull requests. Read the current [v1.1.0 release notes](releases/v1.1.0.md) or the [v1.0.0 release notes](releases/v1.0.0.md).
 
 ## Expected Output
 
-The agent should explain the outcome, significant findings with locations and status, sources supporting important conclusions, checks actually performed, and remaining limitations. It should distinguish documented API requirements from architectural interpretation and project-specific choices.
+The agent should link the updated folder and shared migration reports and explain the outcome, significant findings with locations and status, sources supporting important conclusions, checks actually performed, and remaining limitations. It should distinguish documented API requirements from architectural interpretation and project-specific choices, and verified local refactoring from completed migration.
 
 Passing tests alone do not establish architectural quality. Review the resulting diff and the evidence behind the agent's decisions.
 

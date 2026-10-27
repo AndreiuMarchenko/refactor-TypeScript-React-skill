@@ -7,7 +7,7 @@ Run from the root of this skill repository for a new personal installation:
 ```sh
 skill_target="$HOME/.claude/skills/source-driven-refactor"
 mkdir -p "$skill_target"
-cp -R SKILL.md LICENSE agents references "$skill_target/"
+cp -R SKILL.md LICENSE agents references assets "$skill_target/"
 ```
 
 For a team installation, use `/absolute/path/to/your-project/.claude/skills/source-driven-refactor` as `skill_target` and run the remaining commands. Commit that folder in the target project.
