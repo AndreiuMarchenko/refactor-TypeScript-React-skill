@@ -38,9 +38,9 @@ This filename is a tracking location; the status above determines whether the mi
 
 Final tested source state: {{commit-or-content-manifest-including-untracked-source}}.
 
-| Requirement/scenario | Exact command, working directory, and run time | Actual result on final state             | Evidence               |
-| -------------------- | ---------------------------------------------- | ---------------------------------------- | ---------------------- |
-| {{required-check}}   | {{executed-command-and-context}}               | {{actual-result-or-not-run-with-reason}} | {{artifact-or-output}} |
+| Requirement/scenario | Exact command, working directory, and original run time | Relevant inputs and applicability to final state | Actual result | Evidence |
+| --- | --- | --- | --- | --- |
+| {{required-check}} | {{executed-command-and-context}} | {{newly-executed-or-reused-with-equivalence-evidence-or-stale}} | {{actual-result-or-not-run-with-reason}} | {{artifact-or-output}} |
 
 ## Closure Decision
 

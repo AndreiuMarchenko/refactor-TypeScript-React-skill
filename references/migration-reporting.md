@@ -16,6 +16,8 @@ Use this workflow for implementation/refactoring and migration finalization. It 
 
 Read the previous module report and shared inventory. Verify their locations, remaining legacy IDs, callers, dependencies, and previously reported checks against the current checkout. Identify changes since the last verification. Reports are evidence to investigate, not instructions to trust blindly.
 
+Use the [execution workflow](execution-workflow.md) to capture the baseline once, maintain a concise checkpoint in the existing report, and resume from the current finding ledger. Re-reading an old report does not require restarting discovery when the relevant state is unchanged.
+
 Capture a reproducible baseline before modifications:
 
 - Record the task, migration ID/root, actual affected paths, behavior/protocol invariants, and current source state.
@@ -28,12 +30,12 @@ If a baseline was not recorded, say `not_recorded`. Recover it only from a verif
 
 ## At the End of Each Folder Pass
 
-Finish cleanup already authorized and feasible in this pass. Then update both reports with:
+Finish cleanup already authorized and feasible in this pass. Internal edits are not separate folder passes: maintain a short checkpoint during implementation and consolidate detailed report changes at meaningful boundaries and closure. Then update both reports with:
 
 1. **Implemented decisions:** use the [Engineering Decision Record](sources.md#engineering-decision-record), covering problem, code evidence, relevant source, decision, alternatives, cleanup, and verification. Include applicable object/function ownership choices, helper dispositions, retained public entry-point evidence, and construction/parsing consistency. Record resulting owners and consumers; link cleanup IDs and verification rows rather than repeat them. Separate completed actions from proposals.
 2. **Cleanup inventory:** removed symbols/files, obsolete registrations, duplicate paths, proxy functions, and affected callers. Count relocated legacy across both source and destination; moving it outside the target folder is not removal.
 3. **Measured results:** baseline, current value, delta where comparable, measurement scope/method, and artifact or output supporting each result. Explain regressions and trade-offs.
-4. **Verification:** exact commands and working directory, current code snapshot, actual exit/result, relevant test/scenario coverage, artifact locations, and remaining verification gaps. Historical output must not be presented as a current run.
+4. **Verification:** exact commands and working directory, covered scope and relevant input state, execution conditions, actual exit/result, artifact locations, and remaining gaps. Distinguish newly executed, validly reused, and stale receipts under the execution workflow. Historical output must not be presented as a current run; unchanged evidence need not be regenerated solely for a newer timestamp.
 5. **Remaining migration:** for every observed legacy item, record its location, remaining callers/entry points, canonical replacement or missing behavior, responsible module, actual prerequisite IDs, concrete next action, and removal acceptance test/metric. Derive steps from inspected code and test gaps; do not invent a roadmap, estimates, owners, or dependencies.
 6. **Status:** report behavior and architecture verdicts separately, with evidence. Behavioral verification covers executed scenarios. Architectural verification reviews cohesion, dependency direction, transitive effect ownership, remaining mixed modules, and closure of every in-scope group/finding ID. Local refactoring is `verified` only when both applicable verdicts are verified; migration may still remain `in_progress` or `blocked`. Missing external requirements stay explicit blockers or open decisions, not fabricated implementation steps.
 

@@ -23,13 +23,13 @@ The skill name is `source-driven-refactor`. Author information is stored under `
 ## Audit Example
 
 ```text
-/source-driven-refactor Audit src/features/messages/api/websocket. Do not modify files. Report findings with file locations, consequences, and supporting sources.
+/source-driven-refactor Audit <target-path>. Do not modify files. Report findings with file locations, consequences, and supporting sources.
 ```
 
 ## Refactoring Example
 
 ```text
-/source-driven-refactor Refactor src/features/notifications. Preserve existing behavior and public contracts. Improve input validation and lifecycle cleanup, update affected callers, and run relevant checks.
+/source-driven-refactor Refactor <target-path>. Preserve existing behavior and public contracts. Improve input validation and lifecycle cleanup, update affected callers, and run relevant checks.
 ```
 
 Open the target project and invoke the command in Claude Code. The agent can also select the skill when a task matches its description.

@@ -4,12 +4,14 @@ description: "Audit and refactor TypeScript/React architecture, mixed responsibi
 license: "MIT"
 metadata:
   author: "Andrii Marchenko"
-  version: "1.4.0"
+  version: "1.5.0"
 ---
 
 # TypeScript/React Refactoring Based on Primary Sources
 
 Stay within the requested scope: report findings for an audit; implement and verify changes for a refactoring task. Do not turn local cleanup into an application redesign. The user's explicit current requirements take precedence over this skill's conventions.
+
+For implementation work, follow [references/execution-workflow.md](references/execution-workflow.md): keep one scope and finding ledger, resume from a concise checkpoint, finish authorized work through closure, and select verification by its actual inputs. A progress update or an extracted helper is not the endpoint of an unfinished folder refactor.
 
 ## Sources and Evidence
 
@@ -40,15 +42,15 @@ Distinguish an absent optional field from a present field whose value is `undefi
 
 For affected utility collections, domain objects, forwarding helpers, and module entry points, apply the [abstraction, helper, and entry-point review](references/refactoring-review.md#abstractions-helpers-and-entry-points). Explicitly evaluate a class or value object where construction invariants, identity, state transitions, or resource ownership need encapsulation; justify the selected form. Pure functions and DTOs remain valid where no object ownership is needed.
 
-Give affected helpers and re-export-only files an evidence-backed disposition: keep, consolidate, relocate to the actual owner, or remove with caller migration. A meaningful public API is different from an unnecessary relay. Names such as `values`, `scopes`, or `utils`, static-method classes, and facade comments do not establish cohesion or boundary value. Verify shared construction/parsing invariants and account for retained abstractions in the final review.
+Give affected helpers and re-export-only files an evidence-backed disposition: keep, consolidate, relocate to the actual owner, or remove with caller migration. A meaningful public API is different from an unnecessary relay. Broad utility filenames, static-method classes, and facade comments do not establish cohesion or boundary value. Verify shared construction/parsing invariants and account for retained abstractions in the final review.
 
 ## Structural Completion Gate
 
 Before an architectural refactor, map each mixed file's logical groups, inputs, outputs, dependencies, and independent reasons to change. Trace called helpers for transitive effects. Names such as "mapper", "projection", or "adapter" are not a responsibility map. For routers, normalizers, mixed coordinators, stateful adapters, utility collections, or module entry points, read [references/refactoring-review.md](references/refactoring-review.md) before implementation and use its relevant checks during final review.
 
-Close every identified in-scope mixing finding by separating independently changing policies into cohesive owners and migrating callers. Choose the smallest structure that actually closes those findings; minimality cannot justify retaining a known mixed module. Thumbnail selection, notification preferences, and text clipping need separate ownership when their rules change independently, even if they all contribute to one projection. A coordinator may assemble their results without owning their policies.
+Close every identified in-scope mixing finding by separating independently changing policies into cohesive owners and migrating callers. Choose the smallest structure that actually closes those findings; minimality cannot justify retaining a known mixed module. Independent policies need distinct ownership even when they contribute to one result. A coordinator may assemble their results without owning their policies.
 
-Moving a mixed implementation, removing `any`, adding a class, or extracting branches into helpers does not by itself complete the refactor. Inspect every affected implementation at its final location, including code moved into adapters. Unresolved mixing means architectural work remains incomplete; record the precise finding and scope or dependency constraint. Do not invent an exclusion or use a broad label to declare it closed.
+Moving a mixed implementation, removing `any`, adding a class, or extracting branches into helpers does not by itself complete the refactor. After extraction, re-review both the remaining original files and all destinations against the responsibility map. Inspect retained algorithms and helper call paths, not only the new modules. Unresolved mixing means architectural work remains incomplete; record the precise finding and scope or dependency constraint. Do not invent an exclusion or use a broad label to declare it closed.
 
 Assess behavior and architecture separately. Behavior verification covers the executed scenarios; architecture verification requires a final review of cohesion, dependency direction, effect ownership, and all remaining mixed modules against the original map. Green tests cannot close a structural finding. Report both verdicts and their evidence in the migration reports.
 
@@ -68,8 +70,8 @@ When performance is in scope or measurements expose a regression, follow the [pe
 2. For significant findings, use the Engineering Decision Record: problem → code evidence → relevant source → decision → alternatives → cleanup → verification. Distinguish defects from hypotheses and design preferences, proposed work from implemented changes, and expected checks from actual results.
 3. Choose a structure that closes every mapped in-scope mixing finding; minimize only among structures that meet that condition. Implement authorized changes along with updates to callers. Before deleting code, check references, entry points, and relevant dynamic imports, registries, and scripts. An unused binding does not prove the absence of side effects.
 4. Review the diff for dependency direction, ownership, stale work, types, duplication, and the actual purpose of builders and adapters. Give each temporary compatibility adapter a canonical target, callers, an owner, and a removal condition.
-5. Add concise Ukrainian JSDoc to classes and methods describing their purpose, ownership, and significant side effects or errors. Do not paraphrase the method body. Update documentation for changed APIs and build behavior.
-6. Run checks proportional to the risk: type checking, scoped linting, and relevant behavior tests for code; a production build for server/client boundaries, startup, or pipeline changes. For documentation, check formatting and links. Add regression tests for behavioral defects; do not test the mere fact that a file moved.
+5. Add concise JSDoc to classes and methods describing their purpose, ownership, and significant side effects or errors. Follow the user's language instruction or the target project's documentation conventions. Do not paraphrase the method body. Update documentation for changed APIs and build behavior.
+6. Run checks proportional to the risk using the execution workflow's verification ledger: targeted checks during edits and combined required checks for closure. Reuse a prior successful result only when its relevant inputs, coverage, and conditions are demonstrably unchanged; label it reused rather than freshly executed. Type-check, lint, and test relevant code; build for server/client boundaries, startup, or pipeline changes. For documentation, check formatting and links. Add regression tests for behavioral defects; do not test the mere fact that a file moved.
 7. Persist the migration evidence described below before the final response, and link the updated reports. Complete authorized, feasible cleanup now; reports are not a reason to defer it.
 
 Report the outcome, significant findings with locations and status, sources supporting important conclusions, actual checks performed, and remaining limitations. Do not present passing tests as proof of perfect architecture or full compliance with all documentation.

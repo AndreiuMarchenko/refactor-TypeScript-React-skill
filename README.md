@@ -2,7 +2,7 @@
 
 An Agent Skill for auditing and refactoring TypeScript/React modules using authoritative documentation, explicit resource ownership, and verified behavior.
 
-Current release: [v1.4.0](https://github.com/AndreiuMarchenko/refactor-TypeScript-React-skill/releases/tag/v1.4.0).
+Current release: [v1.5.0](https://github.com/AndreiuMarchenko/refactor-TypeScript-React-skill/releases/tag/v1.5.0).
 
 Use it when cleaning up architecture, improving contracts and types, removing unnecessary wrappers or dead code, or fixing lifecycle and dependency boundaries. It gives Codex, Claude Code, or Cursor a reusable review and implementation workflow without treating legacy code as an architectural model.
 
@@ -13,6 +13,7 @@ Use it when cleaning up architecture, improving contracts and types, removing un
 - Uses legacy code to establish behavior and compatibility, rather than justify new design choices.
 - Groups responsibilities around behavior and ownership, with deliberate dependency boundaries.
 - Requires a per-file responsibility map, closure of identified mixing, and transitive effect review; reports behavior and architectural completion separately.
+- Continues authorized work through closure using one finding ledger, a concise recovery checkpoint, residual-file review, and input-aware verification receipts.
 - Uses React guidance for component boundaries, state ownership, Hooks, and render purity; investigates performance through profiling and comparable Before/After measurements before choosing optimizations.
 - Compares similar contracts by values, ownership, invariants, consumers, and evolution rationale; documents removed duplicates and justified distinctions, including optional, null, and undefined states.
 - Improves input validation, contracts, resource cleanup, and protection against stale callbacks.
@@ -24,7 +25,7 @@ Use it when cleaning up architecture, improving contracts and types, removing un
 
 For an audit request, the agent reports findings. For a refactoring request, it implements and verifies changes within the requested scope. The skill does not enforce a fixed folder structure or replace type checking, linting, tests, or human review.
 
-Read [SKILL.md](SKILL.md) for the complete instructions, [references/sources.md](references/sources.md) for the source catalog, and [references/refactoring-review.md](references/refactoring-review.md) for structural review and behavioral checks. Moving files or passing tests alone does not complete an architectural refactor. The current instructions request Ukrainian JSDoc for classes and methods; specify another language in your task if needed.
+Read [SKILL.md](SKILL.md) for the complete instructions, [references/sources.md](references/sources.md) for the source catalog, and [references/refactoring-review.md](references/refactoring-review.md) for structural review and behavioral checks. Moving files or passing tests alone does not complete an architectural refactor. Documentation language follows the user's instructions or the target project's conventions.
 
 ## Requirements
 
@@ -163,15 +164,15 @@ Mention the skill with `$source-driven-refactor`, or select it through `/skills`
 
 ```text
 $source-driven-refactor
-Audit src/features/messages/api/websocket.
+Audit <target-path>.
 Report architectural and typing issues with file locations, consequences,
 and supporting sources. Do not modify files.
 ```
 
 ```text
 $source-driven-refactor
-Refactor src/features/messages/api/websocket.
-Preserve the public API and wire protocol. Remove unnecessary forwarding
+Refactor <target-path>.
+Preserve the public API and applicable data contracts. Remove unnecessary forwarding
 helpers, improve contracts, and make resource ownership explicit.
 Update affected callers and run relevant checks.
 ```
@@ -181,7 +182,7 @@ Update affected callers and run relevant checks.
 Invoke the installed skill with `/source-driven-refactor`, followed by the task. See [Claude Code invocation](https://code.claude.com/docs/en/skills).
 
 ```text
-/source-driven-refactor Refactor src/features/notifications. Preserve existing behavior, improve input validation and lifecycle cleanup, and verify affected consumers.
+/source-driven-refactor Refactor <target-path>. Preserve existing behavior, improve input validation and lifecycle cleanup, and verify affected consumers.
 ```
 
 ### Cursor
@@ -189,7 +190,7 @@ Invoke the installed skill with `/source-driven-refactor`, followed by the task.
 In Agent chat, type `/` and select `source-driven-refactor`, then describe the task. See [Cursor skill invocation](https://cursor.com/docs/skills#how-skills-work).
 
 ```text
-/source-driven-refactor Audit src/features/notifications. Report findings with sources and file locations. Do not modify files.
+/source-driven-refactor Audit <target-path>. Report findings with sources and file locations. Do not modify files.
 ```
 
 All three tools can also select a relevant skill automatically based on its description. Explicit invocation makes the requested workflow clear.
@@ -205,6 +206,10 @@ All three tools can also select a relevant skill automatically based on its desc
 `agents/openai.yaml` is the working Codex metadata example. Claude Code and Cursor load the shared skill instructions through their own discovery locations.
 
 ## Migration Reports and Final Completion
+
+The [execution workflow](references/execution-workflow.md) applies across projects. Replace usage placeholders with the authorized target; its rules do not depend on any particular business domain or repository layout. Internal implementation steps continue through the declared endpoint without requiring a new prompt after each extraction.
+
+Maintain a short Execution Checkpoint at the top of the existing module report: scope/source state, accepted decisions, finding IDs, changed paths and residual reviews, verification applicability, and the next action. Resume by inspecting the delta from that checkpoint rather than restarting the audit. Re-review original files and destinations after extraction. Use targeted checks during edits, account for combined required checks at closure, and reuse successful receipts only with evidence that their relevant inputs and conditions still match.
 
 Each authorized refactoring pass creates or updates:
 
@@ -225,7 +230,7 @@ Example finalization request; use the ID and scope already recorded for your mig
 
 ```text
 $source-driven-refactor
-Finalize the chat-cleanup migration within src/features/chat and its affected consumers.
+Finalize <migration-id> within <authorized-root> and its affected consumers.
 Read all module MIGRATION_REPORT.md files and the shared MIGRATION_COMPLETION.md.
 Revalidate their claims, inspect unassessed folders, execute remaining migrations,
 remove superseded production code, and run combined checks and applicable measurements.
@@ -248,6 +253,7 @@ refactor-TypeScript-React-skill/
 │   └── migration-completion.template.md
 ├── references/
 │   ├── sources.md
+│   ├── execution-workflow.md
 │   ├── refactoring-review.md
 │   └── migration-reporting.md
 ├── releases/
@@ -255,7 +261,8 @@ refactor-TypeScript-React-skill/
 │   ├── v1.1.0.md
 │   ├── v1.2.0.md
 │   ├── v1.3.0.md
-│   └── v1.4.0.md
+│   ├── v1.4.0.md
+│   └── v1.5.0.md
 └── examples/
     ├── codex.md
     ├── claude-code.md
@@ -264,7 +271,7 @@ refactor-TypeScript-React-skill/
     └── mixed-mapper/     # Independent structural evaluation with an already-green baseline
 ```
 
-GitHub Actions runs both example projects' behavior/type checks on pushes and pull requests. Read the current [v1.4.0 release notes](releases/v1.4.0.md), or earlier notes for [v1.3.0](releases/v1.3.0.md), [v1.2.0](releases/v1.2.0.md), [v1.1.0](releases/v1.1.0.md), and [v1.0.0](releases/v1.0.0.md). Architectural grading of the mixed-mapper exercise remains a separate review.
+GitHub Actions runs both example projects' behavior/type checks on pushes and pull requests. Read the current [v1.5.0 release notes](releases/v1.5.0.md) or the [release history](releases/). Architectural grading of the mixed-mapper exercise remains a separate review.
 
 ## Expected Output
 

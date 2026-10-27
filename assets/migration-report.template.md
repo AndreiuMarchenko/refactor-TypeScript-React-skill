@@ -14,6 +14,17 @@ validated_code_state: unverified
 Shared record: {{relative-link-to-MIGRATION_COMPLETION.md}}.
 Updated: {{actual-timestamp-and-timezone}}.
 
+## Execution Checkpoint
+
+- **Scope and source state:** {{authorized-inventory-baseline-reference-and-current-state}}
+- **Accepted decisions:** {{owner-contract-decisions-and-detail-links}}
+- **Finding ledger:** {{closed-open-in-progress-and-blocked-IDs}}
+- **Task changes and residual review:** {{changed-paths-original-files-and-destinations-still-to-inspect}}
+- **Verification:** {{receipt-links-with-applicable-stale-or-missing-status-and-relevant-input-state}}
+- **Next action:** {{concrete-action-advancing-an-open-finding-or-verified-closure}}
+
+{{Keep this checkpoint concise and current. On resume, compare recorded inputs with the checkout and continue from the ledger; do not restart the full audit or regenerate unchanged evidence.}}
+
 ## Scope and Acceptance Criteria
 
 {{Requested outcome, inspected paths/consumers, behavior/protocol invariants, and actual acceptance criteria. List exclusions and unassessed areas explicitly.}}
@@ -63,9 +74,11 @@ Updated: {{actual-timestamp-and-timezone}}.
 Code snapshot: {{commit-or-content-manifest-including-untracked-source}}.
 Baseline snapshot: {{verified-baseline-or-not-recorded}}.
 
-| Check and covered scenarios | Exact command and working directory | Execution time and code state | Actual result                                   | Evidence artifact/output |
-| --------------------------- | ----------------------------------- | ----------------------------- | ----------------------------------------------- | ------------------------ |
-| {{relevant-check}}          | {{executed-command}}                | {{actual-run-context}}        | {{exit-code-and-result-or-not-run-with-reason}} | {{resolvable-evidence}}  |
+| Check and covered scenarios | Exact command and working directory | Execution time, relevant input state, and conditions | Execution/applicability status and actual result | Evidence artifact/output |
+| --- | --- | --- | --- | --- |
+| {{relevant-check}} | {{executed-command}} | {{original-run-time-input-fingerprint-and-conditions}} | {{newly-executed-validly-reused-stale-or-not-run-with-reason-and-result}} | {{resolvable-evidence}} |
+
+{{For reused results, preserve the original timestamp and explain unchanged coverage, inputs, and assumptions. For stale results, name the invalidating change and required rerun. Reporting-only edits do not automatically invalidate runtime evidence.}}
 
 ## Remaining Migration and Dependencies
 

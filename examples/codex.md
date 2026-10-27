@@ -24,7 +24,7 @@ The default prompt explicitly mentions `$source-driven-refactor`. Automatic sele
 
 ```text
 $source-driven-refactor
-Audit src/features/messages/api/websocket.
+Audit <target-path>.
 Report defects and architectural findings with severity, file locations,
 supporting sources, and consequences. Do not modify files.
 ```
@@ -33,8 +33,8 @@ supporting sources, and consequences. Do not modify files.
 
 ```text
 $source-driven-refactor
-Refactor src/features/messages/api/websocket.
-Preserve the public API and wire protocol. Make resource ownership explicit,
+Refactor <target-path>.
+Preserve the public API and applicable data contracts. Make resource ownership explicit,
 improve contracts, and remove proven dead code and unnecessary wrappers.
 Update affected callers, run relevant checks, and report remaining issues.
 ```

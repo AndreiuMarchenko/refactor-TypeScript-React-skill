@@ -23,13 +23,13 @@ Cursor loads the shared [SKILL.md](../SKILL.md) and supporting references. No ad
 In Agent chat, type `/`, select `source-driven-refactor`, and enter the task:
 
 ```text
-/source-driven-refactor Audit src/features/messages/api/websocket. Report findings with file locations, supporting sources, and consequences. Do not modify files.
+/source-driven-refactor Audit <target-path>. Report findings with file locations, supporting sources, and consequences. Do not modify files.
 ```
 
 ## Refactoring Example
 
 ```text
-/source-driven-refactor Refactor src/features/notifications. Preserve public contracts and behavior. Remove unnecessary wrappers, strengthen types, and make resource ownership explicit. Verify affected consumers and report the checks performed.
+/source-driven-refactor Refactor <target-path>. Preserve public contracts and behavior. Remove unnecessary wrappers, strengthen types, and make resource ownership explicit. Verify affected consumers and report the checks performed.
 ```
 
 Open the target project in Cursor. Agent can also select the skill based on its description. This example covers local use; personal skills for Cloud Agents require the separate synchronization workflow described in Cursor's documentation.
