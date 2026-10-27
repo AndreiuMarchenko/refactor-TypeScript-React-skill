@@ -36,6 +36,8 @@ Updated: {{actual-timestamp-and-timezone}}.
 | ------------- | -------------------------- | ----------------------------------- | -------------------------------------- | -------------------------------------- |
 | {{stable-id}} | {{actual-path-or-symbol}}  | {{replacement-or-missing-contract}} | {{verified-consumers}}                 | {{removed-or-remaining-with-evidence}} |
 
+{{For affected similar contracts, identify duplicates eliminated and explain why remaining contracts stay separate. Compare values, ownership, invariants, consumers, and evolution rationale; record intentional optional/null/undefined differences and the purpose of retained aliases or specializations. State not_applicable with a reason if no similar contracts are affected.}}
+
 ## Measured Results
 
 | Metric and units    | Definition, scope, and method | Before                       | After                        | Comparable delta               | Evidence                        |

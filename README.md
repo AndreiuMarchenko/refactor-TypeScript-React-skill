@@ -12,6 +12,7 @@ Use it when cleaning up architecture, improving contracts and types, removing un
 - Selects sources for the observed problem and records significant decisions with evidence, alternatives, cleanup, and verification. State identity, external stores, behavioral testing, and unsafe assignments have dedicated source guidance.
 - Uses legacy code to establish behavior and compatibility, rather than justify new design choices.
 - Groups responsibilities around behavior and ownership, with deliberate dependency boundaries.
+- Compares similar contracts by values, ownership, invariants, consumers, and evolution rationale; documents removed duplicates and justified distinctions, including optional, null, and undefined states.
 - Improves input validation, contracts, resource cleanup, and protection against stale callbacks.
 - Applies classes, builders, and other patterns only when they solve an identified problem.
 - Requires evidence for dead-code removal and checks appropriate to the change.

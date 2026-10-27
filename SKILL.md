@@ -30,6 +30,12 @@ Read legacy code to understand APIs, callers, wire/storage formats, side effects
 - Accept unvalidated input as `unknown` and narrow it with guards or decoders. Separate wire DTOs, domain data, and UI models where their invariants differ. Use a discriminated union for mutually exclusive states.
 - Do not hide technical debt with `any`, unchecked double casts, or disabled checks. Do not change identifier precision, wire/storage keys, or business semantics as a side effect of cleanup.
 
+## Contract Identity and Reuse
+
+Before adding or retaining similar contracts, compare their values, ownership, invariants, consumers, and the rationale behind their evolution. Reuse a shared concept through a common contract or a justified specialization. Identical fields alone do not justify merging types; an alias must have a distinct purpose.
+
+Distinguish an absent optional field from a present field whose value is `undefined` or `null`. Preserve these distinctions through contract changes, decoding, and mapping. In the final review, document which contract duplicates were eliminated and why the remaining similar contracts were kept separate, using ownership, invariants, and consumer evidence.
+
 ## Structural Completion Gate
 
 Before an architectural refactor, identify the target's responsibilities and independent reasons to change. Choose boundaries from that map, not from file length or the names of existing folders. For routers, normalizers, mixed coordinators, or stateful adapters, read [references/refactoring-review.md](references/refactoring-review.md) before implementation and use its relevant checks during final review.

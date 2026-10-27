@@ -24,4 +24,6 @@ Assert consumer-visible data and final state, not only helper calls, branch coun
 
 ## Final Review
 
+For affected similar contracts, record the duplicates eliminated and the reasons for each retained separation under the skill's Contract Identity and Reuse criteria. Check actual consumer semantics and field-presence behavior; matching fields or different type names alone do not establish whether concepts should be shared.
+
 Compare the final responsibility map with the original problem. Search for old symbols and reachable superseded paths, and apply the skill's Legacy Cleanup rules to intentional compatibility code. Check relocated bodies as carefully as new code. Where a stable local boundary can be enforced by an existing linter or dependency check, add and verify that check; avoid arbitrary line-count limits or tests that merely match implementation text. Report concrete remaining defects or uncertainty; do not use passing checks to waive an unresolved finding. Persist the evidence and remaining dependencies using [migration-reporting.md](migration-reporting.md); a verified folder refactor does not establish migration-wide completion.
