@@ -12,6 +12,7 @@ Use it when cleaning up architecture, improving contracts and types, removing un
 - Improves input validation, contracts, resource cleanup, and protection against stale callbacks.
 - Applies classes, builders, and other patterns only when they solve an identified problem.
 - Requires evidence for dead-code removal and checks appropriate to the change.
+- Checks that migrated callers no longer reach obsolete implementations, duplicate logic, or unnecessary adapters.
 
 For an audit request, the agent reports findings. For a refactoring request, it implements and verifies changes within the requested scope. The skill does not enforce a fixed folder structure or replace type checking, linting, tests, or human review.
 
@@ -23,7 +24,81 @@ Read [SKILL.md](SKILL.md) for the complete instructions and [references/sources.
 - Access to the target repository and its existing development tools.
 - Documentation access to verify source claims. If unavailable, the agent must identify what it could not verify.
 
-The skill itself has no package dependencies, executable scripts, or separate build step. Repository checks use the target project's tools.
+The installed skill has no package dependencies or separate build step. The optional [React demo](examples/react-demo/README.md) has its own locked dependencies and supported Node versions; repository checks use the target project's tools.
+
+## Before / After: a Working React Component
+
+The [notifications demo](examples/react-demo/README.md) is a runnable React/TypeScript application created for this repository. These excerpts come from its actual components; this is a reproducible reference scenario, not a claim of validation on an external production application.
+
+**Before** — [full component](examples/react-demo/fixtures/before/notifications/Notifications.tsx). A forwarding adapter owns an unreachable cancellation signal, and the component accepts external data through a cast:
+
+```tsx
+useEffect(() => {
+  setLoading(true);
+  setError('');
+  notificationAdapter(load, roomId).then((payload) => {
+    setItems(payload as Notification[]);
+    setLoading(false);
+  }).catch((reason: unknown) => {
+    setError(reason instanceof Error ? reason.message : 'Unable to load notifications');
+    setLoading(false);
+  });
+}, [roomId, load]);
+```
+
+If room A responds after room B, A overwrites B's notifications. Unmounting does not abort the request, and malformed fields reach the UI.
+
+**After** — [full component](examples/react-demo/src/notifications/Notifications.tsx) and [wire decoder](examples/react-demo/src/notifications/notification.ts). The Effect owns cancellation, ignores stale work even when the transport ignores abort, and validates `unknown` at the boundary:
+
+```tsx
+useEffect(() => {
+  const controller = new AbortController();
+  let active = true;
+  setState({ status: 'loading' });
+
+  async function refresh() {
+    try {
+      const payload = await load(roomId, controller.signal);
+      if (active) setState({ status: 'ready', items: decodeNotifications(payload) });
+    } catch (error: unknown) {
+      if (active) setState({
+        status: 'error',
+        message: error instanceof Error ? error.message : 'Unable to load notifications',
+      });
+    }
+  }
+  void refresh();
+  return () => {
+    active = false;
+    controller.abort();
+  };
+}, [roomId, load]);
+```
+
+The public `Notifications({ roomId, load })` API stays the same. A keyed child scopes state to the room; a discriminated union replaces independent loading/error/data flags, and the unread count is derived during render. The adapter and superseded client are absent from the application source. No class, Builder, or DI container is needed for this ownership boundary.
+
+Cleanup and stale-response protection follow [React's Effect contract](https://react.dev/reference/react/useEffect#fetching-data-with-effects); deriving the count follows [React's guidance on redundant state](https://react.dev/learn/you-might-not-need-an-effect#updating-state-based-on-props-or-state). The decoder uses [TypeScript narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html). The keyed boundary and file layout are local design decisions.
+
+## Legacy Cleanup
+
+Creating new files does not complete a refactor. The skill also checks that callers have migrated and obsolete execution paths, duplicate algorithms/contracts, stale exports, and adapters without a purpose are removed within scope.
+
+Before deletion, the agent traces imports, entry points, dynamic loading, registries, scripts, and import side effects relevant to the change. Afterward, it reviews the diff, searches for old paths/symbols, and verifies affected behavior and build boundaries. A passing test alone cannot establish that old code is unreachable.
+
+If compatibility code must remain, the report identifies its canonical replacement, callers, owner, and removal condition. In the demo, historical Before files remain only as explicit test fixtures; the production build rejects any fixture in its module graph. See the [cleanup evidence and validation record](examples/react-demo/README.md#validation-record).
+
+## Try the React Demo
+
+From this repository's root:
+
+```sh
+cd examples/react-demo
+npm ci
+npm run check
+npm run dev
+```
+
+`check` runs the After tests, verifies that the Before component exhibits exactly the six expected regression failures, type-checks both versions, and builds the application. `npm run test:before` exposes those failures directly and intentionally exits nonzero. The [demo guide](examples/react-demo/README.md) includes a repeatable skill-evaluation task and expected findings.
 
 ## Installation
 
@@ -124,6 +199,7 @@ All three tools can also select a relevant skill automatically based on its desc
 ```text
 refactor-TypeScript-React-skill/
 ├── .gitignore
+├── .github/workflows/validate.yml
 ├── README.md
 ├── LICENSE
 ├── SKILL.md
@@ -131,11 +207,16 @@ refactor-TypeScript-React-skill/
 │   └── openai.yaml
 ├── references/
 │   └── sources.md
+├── releases/
+│   └── v1.0.0.md
 └── examples/
     ├── codex.md
     ├── claude-code.md
-    └── cursor.md
+    ├── cursor.md
+    └── react-demo/       # Runnable Before/After app, shared tests, locked dependencies
 ```
+
+GitHub Actions runs the demo checks on pushes and pull requests. Release notes are maintained in [releases/v1.0.0.md](releases/v1.0.0.md).
 
 ## Expected Output
 

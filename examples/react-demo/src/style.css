@@ -1,0 +1,5 @@
+:root { font-family: system-ui, sans-serif; color: #202d3a; background: #f3f6fa; }
+main { max-width: 40rem; margin: 4rem auto; padding: 2rem; background: white; border-radius: 1rem; }
+select { font: inherit; padding: .5rem; margin-left: .5rem; }
+li { margin-block: .75rem; }
+[role="alert"] { color: #a12c28; }

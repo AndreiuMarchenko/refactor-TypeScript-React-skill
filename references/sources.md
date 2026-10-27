@@ -8,6 +8,7 @@ This is an index, not a substitute for documentation. Read the sections relevant
 | Robert C. Martin: [The Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) | Dependency direction and separation of policy from mechanisms. It does not require identical layers for every module. |
 | React: [useEffect](https://react.dev/reference/react/useEffect) | External systems, dependencies, setup/cleanup. The official API contract. |
 | React: [Synchronizing with Effects](https://react.dev/learn/synchronizing-with-effects) | Repeated setup/cleanup and management of unfinished work. |
+| React: [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect) | Derived values, redundant state, and whether synchronization needs an Effect. |
 | TypeScript: [Classes](https://www.typescriptlang.org/docs/handbook/2/classes.html) | State, visibility, inheritance, and instance contracts; language documentation does not mandate OOP. |
 | TypeScript: [Narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html) | Guards, input validation, discriminated unions, and exhaustive handling. |
 | Refactoring Guru: [Builder](https://refactoring.guru/design-patterns/builder) | Assessing the need for construction in stages. The catalog explains the pattern; it is not normative React/TypeScript documentation. |

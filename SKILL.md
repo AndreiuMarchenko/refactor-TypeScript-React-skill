@@ -46,3 +46,11 @@ Read legacy code to understand APIs, callers, wire/storage formats, side effects
 6. Run checks proportional to the risk: type checking, scoped linting, and relevant behavior tests for code; a production build for server/client boundaries, startup, or pipeline changes. For documentation, check formatting and links. Add regression tests for behavioral defects; do not test the mere fact that a file moved.
 
 Report the outcome, significant findings with locations and status, sources supporting important conclusions, actual checks performed, and remaining limitations. Do not present passing tests as proof of perfect architecture or full compliance with all documentation.
+
+## Legacy Cleanup
+
+A new structure is not a completed migration while obsolete execution paths remain reachable. Trace callers from application entry points through static and dynamic imports, registries, feature flags, package exports, and startup/build scripts relevant to the change. Check side effects before removing an apparently unused module.
+
+After migrating callers, remove superseded implementations, duplicate algorithms/contracts, forwarding adapters without a boundary responsibility, and stale exports/configuration/tests within scope. Do not keep a second execution path as an unexplained fallback. For compatibility code that must remain, report its canonical replacement, remaining callers, owner, and concrete removal condition; label the migration incomplete where appropriate.
+
+Verify both behavior and reachability: inspect the final imports and affected build entry points, search for old symbols/paths, and run relevant checks. A passing test or an unreferenced binding alone does not prove cleanup. Report what was removed, what remains reachable, and the evidence for intentional exceptions. Historical fixtures may remain outside the production module graph when their educational/test purpose is explicit.
