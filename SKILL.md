@@ -4,7 +4,7 @@ description: "Audit and refactor TypeScript/React architecture, mixed responsibi
 license: "MIT"
 metadata:
   author: "Andrii Marchenko"
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # TypeScript/React Refactoring Based on Primary Sources
@@ -23,7 +23,7 @@ Read legacy code to understand APIs, callers, wire/storage formats, side effects
 
 - Group responsibilities by related reasons to change and resource ownership. Define domains around behavior, not an arbitrary number of lines or files.
 - Separate internal policy from React/store/environment/URL/diagnostics wiring. Pass dependencies through narrow contracts at an explicit composition boundary; do not introduce a DI container without a concrete need.
-- Use a class for state, lifecycle, and invariants; use a pure function for transformations. A Builder is justified by construction complexity. Under the approach adopted here, constructors and build methods do not start network activity, timers, or subscriptions.
+- Prefer function components and Hooks for React-owned state and lifecycle, and pure functions for transformations. Choose a class for non-React stateful resources or domain invariants when it provides a concrete ownership benefit. A Builder is justified by construction complexity. Under the approach adopted here, constructors and build methods do not start network activity, timers, or subscriptions.
 - Centralize the shared algorithm while keeping explicit extension points. Inheritance must preserve the base contract; otherwise, choose composition. Every pattern must solve an identified problem.
 - Remove forwarding helpers and config files that provide no policy, validation, adaptation, or boundary responsibility. Keep a wrapper when it provides a required contract. Do not replace unnecessary files with one miscellaneous dump.
 - Keep related contracts near the owner of the responsibility. Do not duplicate every class with an interface. Choose `type` or `interface` based on the contract's shape, not a blanket ban on either.
@@ -43,6 +43,8 @@ Before an architectural refactor, identify the target's responsibilities and ind
 Moving a mixed implementation, removing `any`, adding a class, or extracting branches into helpers does not by itself complete the refactor. Inspect every affected implementation at its final location, including code moved into adapters. Explain which responsibilities were separated and why each remaining coordinator is cohesive. Do not declare completion while a known in-scope responsibility problem is merely relocated or hidden behind a broad port.
 
 Verify observable behavior through affected boundaries. Passing type checks, snapshots, and unit tests is evidence for their covered scenarios, not a substitute for this structural review. Report unresolved structural findings explicitly rather than labeling the whole result clean.
+
+When performance is in scope or measurements expose a regression, follow the [performance optimization workflow](references/migration-reporting.md#performance-optimization) and select relevant sources. Establish a baseline and bottleneck before choosing an optimization; memoization is conditional, and improvement claims require comparable measurements plus preserved behavior.
 
 ## Lifecycle and Executable Code
 

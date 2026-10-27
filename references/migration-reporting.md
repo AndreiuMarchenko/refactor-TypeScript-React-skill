@@ -38,6 +38,16 @@ Finish cleanup already authorized and feasible in this pass. Then update both re
 
 Update the shared index with relative links to folder reports and deduplicate cross-folder items by stable ID. If new work invalidates earlier evidence, mark the affected records stale and reopen the shared status. Preserve the decision/verification history; do not erase failed checks to make the report appear complete.
 
+## Performance Optimization
+
+Apply this workflow when optimization is authorized or measured evidence exposes a relevant regression. It does not require unrelated performance work during every refactor.
+
+1. Define the slow user scenario, representative data/workload, relevant metric, and reproducible baseline. Record the code snapshot, build/profiling mode, browser/device, and applicable CPU/network conditions; do not compare development timings directly with production timings.
+2. Profile to identify the bottleneck: computation, requests, state/subscription updates, React rendering, browser layout/paint, or resource retention. Select the relevant [performance sources](sources.md#performance-sources); React render counts alone do not identify the full interaction cost.
+3. Choose a focused change supported by that evidence. Evaluate simpler algorithms, removal of duplicate work/requests, state ownership, and cleanup before adding caching or manual memoization. Check existing React Compiler coverage when applicable; do not enable it or add dependencies merely because it is listed.
+4. Repeat the same scenario under comparable conditions and record actual Before/After results, samples/variation where material, and tradeoffs in memory, startup cost, or complexity. A profiler estimate is not a substitute for a measured historical baseline. Reconsider changes without a demonstrated benefit or a justified correctness/maintenance purpose.
+5. Verify observable behavior, including affected state identity, freshness, errors, and cleanup. Record performance evidence and coverage limits in the existing Engineering Decision and measurement tables; distinguish a verified cleanup from a verified speedup.
+
 ## Metrics Without Invented Improvements
 
 Use metrics that assess the actual change; do not require every category for every task:
