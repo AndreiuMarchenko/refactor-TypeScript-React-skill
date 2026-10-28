@@ -4,7 +4,7 @@ description: "Audit and refactor TypeScript/React architecture, mixed responsibi
 license: "MIT"
 metadata:
   author: "Andrii Marchenko"
-  version: "1.5.0"
+  version: "1.6.0"
 ---
 
 # TypeScript/React Refactoring Based on Primary Sources
@@ -32,6 +32,17 @@ Read legacy code to understand APIs, callers, wire/storage formats, side effects
 - Accept unvalidated input as `unknown` and narrow it with guards or decoders. Separate wire DTOs, domain data, and UI models where their invariants differ. Use a discriminated union for mutually exclusive states.
 - Do not hide technical debt with `any`, unchecked double casts, or disabled checks. Do not change identifier precision, wire/storage keys, or business semantics as a side effect of cleanup.
 
+## Module Granularity and Completion
+
+- A distinct rule or invariant does not automatically require a separate file.
+- Centralize shared validation in an existing cohesive module when it has the appropriate semantic ownership; preserve each validator's acceptance and field-presence contract.
+- A new module must improve responsibility boundaries or navigation. Giving a function its own filename is insufficient; compare placement in an existing owner before introducing another module.
+- Judge completion by the resulting structure, supported behavior, and closed findings, not by the number of completed tables. Reports document the evidence; they do not establish architectural quality by themselves.
+
+## Layer Boundaries and Dependency Direction
+
+Apply the [layer dependency review](references/refactoring-review.md#layer-boundaries-and-dependency-direction) to actual module roles. Domain rules and application scenarios must remain independent of concrete databases, ORM models, network clients, React, global stores, and browser APIs. Define required I/O contracts with the inner consumer; external adapters implement them and composition connects the implementations. Verify transitive imports and data contracts as well as direct calls. Framework-owned UI/adapters may use their framework; do not manufacture empty layers or repositories where no such boundary exists.
+
 ## Contract Identity and Reuse
 
 Before adding or retaining similar contracts, compare their values, ownership, invariants, consumers, and the rationale behind their evolution. Reuse a shared concept through a common contract or a justified specialization. Identical fields alone do not justify merging types; an alias must have a distinct purpose.
@@ -44,7 +55,11 @@ For affected utility collections, domain objects, forwarding helpers, and module
 
 Give affected helpers and re-export-only files an evidence-backed disposition: keep, consolidate, relocate to the actual owner, or remove with caller migration. A meaningful public API is different from an unnecessary relay. Broad utility filenames, static-method classes, and facade comments do not establish cohesion or boundary value. Verify shared construction/parsing invariants and account for retained abstractions in the final review.
 
+For a folder refactor, apply the [mandatory residual symbol review](references/refactoring-review.md#mandatory-residual-symbol-review) to retained utility collections, coordinators, adapters, and entry points, including unchanged files. Account for private policy helpers as well as exported declarations and re-exports. Existing callers, a clean dependency graph, and labels such as "shared primitives" or "public API" are insufficient retention evidence. Missing symbol dispositions or unsupported exceptions keep architecture unverified.
+
 ## Structural Completion Gate
+
+For a folder refactor, establish the [whole-folder architecture and layout](references/execution-workflow.md#whole-folder-architecture-before-local-edits) before detailed helper edits. Cover every production file, responsibility/state/contract owners, entry points, dependency direction, and end-to-end data/effect flow. Reconcile prior findings only after forming this current-code view. Symbol dispositions support this map; they do not replace it. Finish with a whole-folder consolidation review, including new tiny modules and unchanged files, rather than stop when the inherited finding list is closed.
 
 Before an architectural refactor, map each mixed file's logical groups, inputs, outputs, dependencies, and independent reasons to change. Trace called helpers for transitive effects. Names such as "mapper", "projection", or "adapter" are not a responsibility map. For routers, normalizers, mixed coordinators, stateful adapters, utility collections, or module entry points, read [references/refactoring-review.md](references/refactoring-review.md) before implementation and use its relevant checks during final review.
 

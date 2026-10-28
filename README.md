@@ -2,7 +2,7 @@
 
 An Agent Skill for auditing and refactoring TypeScript/React modules using authoritative documentation, explicit resource ownership, and verified behavior.
 
-Current release: [v1.5.0](https://github.com/AndreiuMarchenko/refactor-TypeScript-React-skill/releases/tag/v1.5.0).
+Current release: [v1.6.0](https://github.com/AndreiuMarchenko/refactor-TypeScript-React-skill/releases/tag/v1.6.0).
 
 Use it when cleaning up architecture, improving contracts and types, removing unnecessary wrappers or dead code, or fixing lifecycle and dependency boundaries. It gives Codex, Claude Code, or Cursor a reusable review and implementation workflow without treating legacy code as an architectural model.
 
@@ -13,12 +13,14 @@ Use it when cleaning up architecture, improving contracts and types, removing un
 - Uses legacy code to establish behavior and compatibility, rather than justify new design choices.
 - Groups responsibilities around behavior and ownership, with deliberate dependency boundaries.
 - Requires a per-file responsibility map, closure of identified mixing, and transitive effect review; reports behavior and architectural completion separately.
+- Establishes whole-folder ownership and dependency/data flow before local edits, then reviews consolidation, placement, and tiny-module navigation costs; prior reports do not limit discovery to inherited findings.
 - Continues authorized work through closure using one finding ledger, a concise recovery checkpoint, residual-file review, and input-aware verification receipts.
 - Uses React guidance for component boundaries, state ownership, Hooks, and render purity; investigates performance through profiling and comparable Before/After measurements before choosing optimizations.
 - Compares similar contracts by values, ownership, invariants, consumers, and evolution rationale; documents removed duplicates and justified distinctions, including optional, null, and undefined states.
 - Improves input validation, contracts, resource cleanup, and protection against stale callbacks.
 - Applies classes, builders, and other patterns only when they solve an identified problem.
 - Explicitly reviews class/value-object versus function ownership, helper cleanup, public entry points versus redundant relays, and consistency between construction and parsing.
+- Requires symbol dispositions for retained utility collections, coordinator helpers, and entry points, including unchanged files; existing callers and broad architectural labels do not justify keeping an abstraction.
 - Requires evidence for dead-code removal and checks appropriate to the change.
 - Checks that migrated callers no longer reach obsolete implementations, duplicate logic, or unnecessary adapters.
 - Writes per-folder migration reports and a shared completion record with implemented decisions, measured results, remaining dependencies, and evidence-based closure criteria.
@@ -262,7 +264,8 @@ refactor-TypeScript-React-skill/
 │   ├── v1.2.0.md
 │   ├── v1.3.0.md
 │   ├── v1.4.0.md
-│   └── v1.5.0.md
+│   ├── v1.5.0.md
+│   └── v1.6.0.md
 └── examples/
     ├── codex.md
     ├── claude-code.md
@@ -271,7 +274,7 @@ refactor-TypeScript-React-skill/
     └── mixed-mapper/     # Independent structural evaluation with an already-green baseline
 ```
 
-GitHub Actions runs both example projects' behavior/type checks on pushes and pull requests. Read the current [v1.5.0 release notes](releases/v1.5.0.md) or the [release history](releases/). Architectural grading of the mixed-mapper exercise remains a separate review.
+GitHub Actions runs both example projects' behavior/type checks on pushes and pull requests. Read the current [v1.6.0 release notes](releases/v1.6.0.md) or the [release history](releases/). Architectural grading of the mixed-mapper exercise remains a separate review.
 
 ## Expected Output
 
